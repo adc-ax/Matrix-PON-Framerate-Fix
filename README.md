@@ -12,7 +12,7 @@ https://github.com/ThirteenAG/WidescreenFixesPack
 This fix has not been thorougly tested yet - I can provide no warranty for what happens to your game installation or PC when using this patch.
 So far I have played a level without any gameplay glitches that I could see. See the video linked below if you'd like to see the patch in action.
 
-https://www.youtube.com/watch?v=k0h9LZD60uQ
+https://www.youtube.com/watch?v=lR_j6N7Dy4E
 
 # Installation
 
