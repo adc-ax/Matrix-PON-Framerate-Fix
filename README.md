@@ -24,6 +24,10 @@ Check scripts/TheMatrixPathOfNeo.WidescreenFix.ini for screen resolution, aspect
 To build the patch yourself, see ThirteenAG's instructions for their original widescreen fix. 
 Replace their original dllmain.cpp with my version to add the framerate unlocking functionality.
 
+# Known bugs
+
+Missions with timers / time trials run twice as fast. The issue is being investigated.
+
 # Future plans
 
 When running on modern hardware, the game exhibits graphical glitches on modern hardware. 
