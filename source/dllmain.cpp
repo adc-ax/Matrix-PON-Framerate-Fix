@@ -130,7 +130,6 @@ void Init()
 
     Screen.nWidth = iniReader.ReadInteger("MAIN", "ResX", 0);
     Screen.nHeight = iniReader.ReadInteger("MAIN", "ResY", 0);
-    
 
     bool bFixHud = iniReader.ReadInteger("MAIN", "FixHud", 1) != 0;
 
@@ -160,6 +159,8 @@ void Init()
         }
     }; injector::MakeInline<ResHook>(pattern1.count(3).get(2).get<void>(0), pattern2.count(2).get(1).get<void>(0)); //0x40DD33, 0x40DE21
 
+   
+
     //forcing 4:3 aspect, maybe better to hook sub_4BC320
     auto pattern = hook::pattern("A3 ? ? ? ? A1 ? ? ? ? 85 C0 0F 84 ? ? ? ? 6A 01");
     injector::MakeNOP(pattern.get_first(0), 5, true);
@@ -168,12 +169,15 @@ void Init()
 
    if (bFrameRate)
     {
-        auto patternTimeScale = hook::pattern("C7 05 04 E2 9D 00 00 00 00 40");
-        injector::WriteMemory<float>(patternTimeScale.get_first(6), Timing.fTimeScale, true); // Offset 0x4BC38C
 
-        //Functional workaround
-        auto patternTimeScalePointer = hook::pattern("d9 15 04 e2 9d 00");
-        injector::MakeNOP(patternTimeScalePointer.get_first(0), 6, true);
+        //auto patternTimeScale = hook::pattern("C7 05 04 E2 9D 00 00 00 00 40"); - DON'T USE, THIS IS A HARDCODED OFFSET
+       auto patternTimeScale = hook::pattern("C7 05 ? ? ? ? 00 00 00 40 C7 05 ? ? ? ? 00 00 70 42");
+
+        //Functional workaround.TimeScale is written in two places in the code, the previous WriteMemory takes care of the first place, this MakeNOP disables the code that overwrites it later.
+        //auto patternTimeScalePointer = hook::pattern("d9 15 04 e2 9d 00"); - DON'T USE, THIS IS A HARDCODED OFFSET
+
+        auto patternTimeScalePointer = hook::pattern("d9 15 ? ? ? ? d9 c0 d9 98 b0 02");
+        
         //Workaround ends here
 
         //0x004BC7CA
@@ -184,10 +188,21 @@ void Init()
        
  
 
-        auto patternFrameRate = hook::pattern("C7 05 14 E2 9D 00 00 00 F0 41");
-        injector::WriteMemory<float>(patternFrameRate.get_first(6), Timing.fFrameRate, true); // Offset 0x4BC3A0
+        auto patternFrameRate = hook::pattern("C7 05 ? ? ? ? 00 00 F0 41 C3 90");
+     
         
-        auto patternFrameTime = hook::pattern("C7 44 24 14 89 88 08 3D");
+        auto patternFrameTime = hook::pattern("C7 44 24 14 89 88 08 3D EB");
+
+       /* struct FPSHook {
+
+
+        }; injector::MakeInline<FPSHook>();
+        */
+
+        injector::MakeNOP(patternTimeScalePointer.get_first(0), 6, true);
+        injector::WriteMemory<float>(patternTimeScale.get_first(6), Timing.fTimeScale, true); // Offset 0x4BC38C
+
+        injector::WriteMemory<float>(patternFrameRate.get_first(6), Timing.fFrameRate, true); // Offset 0x4BC3A0
         injector::WriteMemory<float>(patternFrameTime.get_first(4), Timing.fFrameTime, true); // Offset 0x40EDBC
     }
     
