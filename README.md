@@ -27,10 +27,4 @@ Replace their original dllmain.cpp with my version to add the framerate unlockin
 # Known bugs
 
 Missions with timers / time trials run twice as fast. The issue is being investigated.
-
-# Future plans
-
-When running on modern hardware, the game exhibits graphical glitches on modern hardware. 
-For now, I suggest turning down the quality setting (in MatrixConfig.ini in the root folder of your game) down to 8 to avoid major lighting system glitches.
-The "doubling"/haze effect will still exhibit issues (separation too great), same goes for character skin shading. 
-I will look into resolving this issues when I have the time for it.
+Please see the issue tracker to identify known issues. Bug reports are very welcome.
